@@ -20,6 +20,18 @@ require 'chef/knife'
 
 module NodeUpdate
   class NodeUpdateFromFile < Chef::Knife
+      COMPONENTS = [
+        :default,
+        :env_default,
+        :role_default,
+        :force_default,
+        :normal,
+        :override,
+        :role_override,
+        :env_override,
+        :force_override,
+        :automatic
+      ].freeze
 
     deps do
       require 'chef/search/query'
@@ -33,39 +45,32 @@ module NodeUpdate
       @loader ||= ::Chef::Knife::Core::ObjectLoader.new(Chef::Node, ui)
     end
 
-   def merge(from, to)
-     Chef::Node::Attribute::COMPONENTS.inject(Mash.new) do |merged, component_ivar|
-       component_value = node.send(component_ivar)
-       Chef::Mixin::DeepMerge.merge(merged, component_value)
-     end
-   end
+    def merge(from, to)
+      COMPONENTS.each do |component_ivar|
+        from_value = from.send(component_ivar)
+        to_value = to.send(component_ivar)
+        Chef::Mixin::DeepMerge.merge(to_value, from_value)
+      end
+    end
 
 
     def run
       updated = loader.load_from("nodes", @name_args[0])
-
       @node_name = updated.name
       puts "Looking for #{@node_name}"
 
       searcher = Chef::Search::Query.new
       result = searcher.search(:node, "name:#{@node_name}")
 
-      knife_search = Chef::Knife::Search.new
       node = result.first.first
       if node.nil?
         puts "Could not find a node named #{@node_name}"
         exit 1
       end
-p updated.attributes, node.attributes
-#      puts "Setting attribute #{@attribute} to #{@value}"
-#      rb_cmd = "node." + @attribute + "=" + '"' + @value + '"'
-#      eval(rb_cmd)
-#      node.save
-
-#      knife_search = Chef::Knife::Search.new
-#      knife_search.name_args = ['node', "name:#{@node_name}"]
-#      knife_search.run
-
+      merge(updated, node)
+      puts "Saving the updated node #{@node_name}"
+      node.save
+      puts "All done"
     end
   end
 end
