@@ -57,20 +57,20 @@ module NodeUpdate
     def run
       updated = loader.load_from("nodes", @name_args[0])
       @node_name = updated.name
-      puts "Looking for #{@node_name}"
+      ui.info("Looking for #{@node_name}")
 
       searcher = Chef::Search::Query.new
       result = searcher.search(:node, "name:#{@node_name}")
 
       node = result.first.first
       if node.nil?
-        puts "Could not find a node named #{@node_name}"
+        ui.error("Could not find a node named #{@node_name}")
         exit 1
       end
       merge(updated, node)
-      puts "Saving the updated node #{@node_name}"
+      ui.info("Saving the updated node #{@node_name}")
       node.save
-      puts "All done"
+      ui.info("All done")
     end
   end
 end
