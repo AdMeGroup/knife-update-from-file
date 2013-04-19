@@ -20,22 +20,21 @@ require 'chef/knife'
 
 module NodeUpdate
   class NodeUpdateFromFile < Chef::Knife
-      COMPONENTS = [
-        :default,
-        :env_default,
-        :role_default,
-        :force_default,
-        :normal,
-        :override,
-        :role_override,
-        :env_override,
-        :force_override,
-        :automatic
-      ].freeze
+    COMPONENTS = [
+      :default,
+      :env_default,
+      :role_default,
+      :force_default,
+      :normal,
+      :override,
+      :role_override,
+      :env_override,
+      :force_override,
+      :automatic
+    ].freeze
 
     deps do
       require 'chef/search/query'
-      require 'chef/knife/search'
       require 'chef/knife/core/object_loader'
     end
 
