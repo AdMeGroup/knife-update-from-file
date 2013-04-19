@@ -20,20 +20,20 @@
 require 'rubygems'
 require 'rubygems/package_task'
 
-GEM_NAME = "knife-update-from-json"
+GEM_NAME = "knife-update-from-file"
 
-spec = eval(File.read("knife-update-from-json.gemspec"))
+spec = eval(File.read("knife-update-from-file.gemspec"))
 
 Gem::PackageTask.new(spec) do |pkg|
   pkg.gem_spec = spec
 end
 
 task :install => :package do
-  sh %{gem install pkg/#{GEM_NAME}-#{KnifeACL::VERSION} --no-rdoc --no-ri}
+  sh %{gem install pkg/#{GEM_NAME}-#{KnifeUpdateFromFile::VERSION} --no-rdoc --no-ri}
 end
 
 task :uninstall do
-  sh %{gem uninstall #{GEM_NAME} -x -v #{KnifeACL::VERSION} }
+  sh %{gem uninstall #{GEM_NAME} -x -v #{KnifeUpdateFromFile::VERSION} }
 end
 
 begin

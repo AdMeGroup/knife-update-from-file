@@ -1,12 +1,12 @@
 $:.unshift(File.dirname(__FILE__) + '/lib')
-require 'knife-update-from-json/version'
+require 'knife-update-from-file/version'
 
 Gem::Specification.new do |s|
-  s.name = 'knife-update-from-json'
-  s.version = KnifeUpdateFromJSON::VERSION
+  s.name = 'knife-update-from-file'
+  s.version = KnifeUpdateFromFile::VERSION
   s.platform = Gem::Platform::RUBY
   s.extra_rdoc_files = [ ]
-  s.summary = "Knife update from JSON"
+  s.summary = "Knife Update From File"
   s.description = s.summary
   s.author = "Timur Batyrshin"
   s.email = "erthad@gmail.com"
