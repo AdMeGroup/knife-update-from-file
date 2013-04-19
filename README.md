@@ -1,12 +1,12 @@
 # Knife Update From File
 
-# Description
+## Description
 
 This plugin provides `node update from file` knife command which *updates* node attributes in Chef server with
 attributes from JSON file contrary to `node from file` knife command which *overwrites* them.
 Otherwise it should work the same.
 
-# Installation
+## Installation
 
 You need Chef version 0.10.0+ already installed from gems.
 
@@ -14,11 +14,11 @@ You need Chef version 0.10.0+ already installed from gems.
 rake install
 ```
 
-# License
+## License
 
-Author:: Timur Batyrshin (<erthad@gmail.com)
-Copyright:: Copyright (c) 2013 AdMe Group
-License:: Apache License, Version 2.0
+* Author:: Timur Batyrshin (<erthad@gmail.com)
+* Copyright:: Copyright (c) 2013 AdMe Group
+* License:: Apache License, Version 2.0
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
