@@ -67,6 +67,7 @@ module NodeUpdate
         exit 1
       end
       merge(updated, node)
+      node.run_list = updated.run_list
       ui.info("Saving the updated node #{@node_name}")
       node.save
       ui.info("All done")
