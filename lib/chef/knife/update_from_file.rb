@@ -48,7 +48,7 @@ module NodeUpdate
       COMPONENTS.each do |component_ivar|
         from_value = from.send(component_ivar)
         to_value = to.send(component_ivar)
-        Chef::Mixin::DeepMerge.merge(to_value, from_value)
+        to.send("#{component_ivar}=", Chef::Mixin::DeepMerge.merge(to_value, from_value))
       end
     end
 
@@ -66,8 +66,11 @@ module NodeUpdate
         ui.error("Could not find a node named #{@node_name}")
         exit 1
       end
+
       merge(updated, node)
-      node.run_list = updated.run_list
+      node.run_list(updated.run_list)
+      node.chef_environment(updated.chef_environment)
+
       ui.info("Saving the updated node #{@node_name}")
       node.save
       ui.info("All done")
