@@ -77,8 +77,15 @@ module NodeUpdate
       node = result.first.first
 
       if node.nil?
-        ui.error("Could not find a node named #{@node_name}")
-        exit 1
+        ui.warn("Could not find a node named #{node_name}")
+        result = ui.ask_question("Create a new one? (Y/N)", :default => "y").upcase
+        if ['Y', 'YES'].include?(result)
+          system( *%W{knife node from file #{file_path}})
+        else
+          ui.info("Exiting to system")
+          exit 1
+        end
+
       else
         merge_nodes(updated,node)
       end
