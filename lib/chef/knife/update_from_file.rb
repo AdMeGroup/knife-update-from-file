@@ -44,6 +44,10 @@ module NodeUpdate
       @loader ||= ::Chef::Knife::Core::ObjectLoader.new(Chef::Node, ui)
     end
 
+    def searcher
+      @searcher ||= ::Chef::Search::Query.new
+    end
+
     def merge(from, to)
       COMPONENTS.each do |component_ivar|
         from_value = from.send(component_ivar)
@@ -52,27 +56,32 @@ module NodeUpdate
       end
     end
 
-
-    def run
-      updated = loader.load_from("nodes", @name_args[0])
-      @node_name = updated.name
-      ui.info("Looking for #{@node_name}")
-
-      searcher = Chef::Search::Query.new
-      result = searcher.search(:node, "name:#{@node_name}")
-
-      node = result.first.first
-      if node.nil?
-        ui.error("Could not find a node named #{@node_name}")
-        exit 1
-      end
-
+    def merge_nodes(updated, node)
       merge(updated, node)
       node.run_list(updated.run_list)
       node.chef_environment(updated.chef_environment)
 
       ui.info("Saving the updated node #{@node_name}")
       node.save
+    end
+
+    def run
+      file_path = @name_args[0]
+      updated = loader.load_from("nodes", file_path)
+      node_name = updated.name
+
+      ui.info("Looking for #{node_name}")
+
+      result = searcher.search(:node, "name:#{node_name}")
+
+      node = result.first.first
+
+      if node.nil?
+        ui.error("Could not find a node named #{@node_name}")
+        exit 1
+      else
+        merge_nodes(updated,node)
+      end
       ui.info("All done")
     end
   end
