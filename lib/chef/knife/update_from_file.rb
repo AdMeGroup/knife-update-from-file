@@ -70,7 +70,6 @@ module NodeUpdate
         ui.info("Saving the updated node #{@node_name}")
         node.save
       end
-      ui.info("All done")
     end
   end
 end
