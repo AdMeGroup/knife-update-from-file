@@ -20,19 +20,6 @@ require 'chef/knife'
 
 module NodeUpdate
   class NodeUpdateFromFile < Chef::Knife
-    COMPONENTS = [
-      :default,
-      :env_default,
-      :role_default,
-      :force_default,
-      :normal,
-      :override,
-      :role_override,
-      :env_override,
-      :force_override,
-      :automatic
-    ].freeze
-
     deps do
       require 'chef/search/query'
       require 'chef/knife/core/object_loader'
@@ -48,21 +35,12 @@ module NodeUpdate
       @searcher ||= ::Chef::Search::Query.new
     end
 
-    def merge(from, to)
-      COMPONENTS.each do |component_ivar|
-        from_value = from.send(component_ivar)
-        to_value = to.send(component_ivar)
-        to.send("#{component_ivar}=", Chef::Mixin::DeepMerge.merge(to_value, from_value))
-      end
-    end
-
-    def merge_nodes(updated, node)
-      merge(updated, node)
+    def update_node(node, updated)
+      node.normal_attrs = Chef::Mixin::DeepMerge.merge(node.normal_attrs, updated.normal_attrs)
+      node.override_attrs = Chef::Mixin::DeepMerge.merge(node.override_attrs, updated.override_attrs)
       node.run_list(updated.run_list)
       node.chef_environment(updated.chef_environment)
-
-      ui.info("Saving the updated node #{@node_name}")
-      node.save
+      node
     end
 
     def run
@@ -87,7 +65,10 @@ module NodeUpdate
         end
 
       else
-        merge_nodes(updated,node)
+        update_node(node, updated)
+
+        ui.info("Saving the updated node #{@node_name}")
+        node.save
       end
       ui.info("All done")
     end
