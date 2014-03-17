@@ -1,7 +1,10 @@
 #
 # Author:: Adam Jacob (<adam@opscode.com>)
 # Author:: Daniel DeLeo (<dan@opscode.com>)
+# Author:: Timur Batyrshin (<erthad@gmail.com>)
 # Copyright:: Copyright 2008, 2010-2011 Opscode, Inc.
+#             Copyright 2013 AdMe Group
+#
 # License:: Apache License, Version 2.0
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
